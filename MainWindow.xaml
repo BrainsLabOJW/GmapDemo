@@ -30,27 +30,28 @@
                 </Grid.RowDefinitions>
 
                 <ComboBox
-                    x:Name="mapProvider"
+                    x:Name="mapComboBox"
                     Width="150"
                     Margin="0,5,0,5"
-                    Grid.Row="0">
-                    <ComboBoxItem>GoogleSatelliteMap</ComboBoxItem>
-                    <ComboBoxItem>GoogleMap</ComboBoxItem>
-                    <ComboBoxItem>GoogleTerrainMap</ComboBoxItem>
+                    Grid.Row="0"
+                    SelectionChanged="mapComboBox_SelectionChanged">
+
                 </ComboBox>
 
                 <Slider
-                    x:Name="sliderBar"
-                    ValueChanged="sliderBar_ValueChanged"
+                    x:Name="zoomSliderBar"
                     TickPlacement="Both"
                     Orientation="Vertical"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Stretch"
                     Minimum="2"
                     Maximum="20"
+                    Value="15"
+                    IsSnapToTickEnabled="True"
                     Background="#FFFFFF"
                     Opacity="0.75"
-                    Grid.Row="1"/>
+                    Grid.Row="1"
+                    ValueChanged="zoomSliderBar_ValueChanged"/>
 
             </Grid>
         </GroupBox>
