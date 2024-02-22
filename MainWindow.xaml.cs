@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GmapDemo.CustomMarkers;
 
 namespace GmapDemo
 {
@@ -23,8 +24,10 @@ namespace GmapDemo
         PointLatLng end;
 
         GMapMarker currentMarker;
+        GMapMarker marker;
 
         List<PointLatLng> points = new List<PointLatLng>();
+        List<GMapMarker> markers = new List<GMapMarker>();
 
         private bool isMousePressed = false;
         private bool isMouseMoved = false;
@@ -43,10 +46,13 @@ namespace GmapDemo
             mapControl.DragButton = MouseButton.Left;
             mapControl.MouseWheelZoomEnabled = true;
 
+            
+
             mapControl.MouseLeftButtonDown += new MouseButtonEventHandler(mapControl_MouseLeftButtonDown);
             mapControl.MouseLeftButtonUp += new MouseButtonEventHandler(mapControl_MouseLeftButtonUp);
             mapControl.MouseMove += new MouseEventHandler(mapControl_MouseMove);
             mapControl.MouseWheel += new MouseWheelEventHandler(mapControl_MouseWheel);
+            
             
 
             setCurrentMarker();
@@ -57,19 +63,25 @@ namespace GmapDemo
         void setCurrentMarker()
         {
             currentMarker = new GMapMarker(mapControl.Position);
-            currentMarker.Shape = new Ellipse
+
+
+            /*currentMarker.Shape = new Ellipse
             {
                 Stroke = Brushes.Red,
                 StrokeThickness = 2,
                 Fill = new SolidColorBrush(Colors.White),
-                Width = 12,
-                Height = 12
-            };
+                Width = 20,
+                Height = 20
+            };*/
 
-            currentMarker.Offset = new Point(-15, -15);
+            currentMarker.Shape = new CustomMarkerBlue(this, currentMarker);
+
+            currentMarker.Offset = new Point(-20, -43);
             currentMarker.ZIndex = int.MaxValue;
+
             mapControl.Markers.Add(currentMarker);
             points.Add(mapControl.Position);
+            markers.Add(currentMarker);
         }
 
         private void mapControl_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -95,7 +107,6 @@ namespace GmapDemo
             {
                 isMouseMoved = true;
             }
-            
         }
 
         void mapControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -104,22 +115,26 @@ namespace GmapDemo
             {
                 Point clickPoint = e.GetPosition(mapControl);
                 PointLatLng point = mapControl.FromLocalToLatLng((int)clickPoint.X, (int)clickPoint.Y);
-                GMapMarker marker = new GMapMarker(point);
+                marker = new GMapMarker(point);
 
-                marker.Shape = new Ellipse
+                /*marker.Shape = new Ellipse
                 {
                     Stroke = Brushes.Yellow,
                     StrokeThickness = 2,
                     Fill = new SolidColorBrush(Colors.Black),
-                    Width = 10,
-                    Height = 10
-                };
+                    Width = 20,
+                    Height = 20
+                };*/
+
+                points.Add(point);
+                markers.Add(marker);
+
+                marker.Shape = new CustomMarker(this, marker, points);
+                marker.Offset = new Point(-20, -43);
 
                 mapControl.Markers.Add(marker);
-                points.Add(point);
 
-
-                PolygonTest();
+                DrawRoute();
             }
             else 
             {
@@ -165,13 +180,13 @@ namespace GmapDemo
             mapControl.Zoom = e.NewValue;
         }
 
-        void PolygonTest()
+        void DrawRoute()
         {
             GMapRoute route = new GMapRoute(points);
                        
             Path path = new Path();
-            path.Stroke = Brushes.Teal;
-            path.StrokeThickness = 1.5;
+            path.Stroke = Brushes.Red;
+            path.StrokeThickness = 2;
             path.Effect = null;
 
             route.Shape = path;

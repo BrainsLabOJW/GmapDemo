@@ -1,0 +1,14 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="GmapDemo.CustomMarkers.CustomMarker"
+    Height="48" Width="40">
+
+    <Image
+        Name="Icon"
+        Source="marker_green.png"
+        VerticalAlignment="Stretch"
+        HorizontalAlignment="Stretch"
+        />
+
+</UserControl>

@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="CustomMarkers\location_pin.png" />
+    <None Remove="CustomMarkers\marker_blue.png" />
+    <None Remove="CustomMarkers\marker_green.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="GMap.NET.Core" Version="2.1.7" />
     <PackageReference Include="GMap.NET.WinPresentation" Version="2.1.7" />
@@ -18,6 +24,12 @@
     <Folder Include="Model\" />
     <Folder Include="View\" />
     <Folder Include="ViewModel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="CustomMarkers\location_pin.png" />
+    <Resource Include="CustomMarkers\marker_blue.png" />
+    <Resource Include="CustomMarkers\marker_green.png" />
   </ItemGroup>
 
 </Project>
