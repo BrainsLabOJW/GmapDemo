@@ -1,0 +1,58 @@
+﻿<Window x:Class="GmapDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GmapDemo"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="650" Width="800"
+        ResizeMode="NoResize">
+    <Grid>
+        <GroupBox
+            x:Name="mapGroup"
+            VerticalContentAlignment="Stretch"
+            HorizontalContentAlignment="Stretch">
+            <local:MapControls
+                x:Name="mapControl"
+                Zoom="15"
+                MinZoom="2"
+                MaxZoom="20" />
+        </GroupBox>
+        
+        <GroupBox
+            HorizontalAlignment="Right"
+            VerticalAlignment="Stretch">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <ComboBox
+                    x:Name="mapProvider"
+                    Width="150"
+                    Margin="0,5,0,5"
+                    Grid.Row="0">
+                    <ComboBoxItem>GoogleSatelliteMap</ComboBoxItem>
+                    <ComboBoxItem>GoogleMap</ComboBoxItem>
+                    <ComboBoxItem>GoogleTerrainMap</ComboBoxItem>
+                </ComboBox>
+
+                <Slider
+                    x:Name="sliderBar"
+                    ValueChanged="sliderBar_ValueChanged"
+                    TickPlacement="Both"
+                    Orientation="Vertical"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Stretch"
+                    Minimum="2"
+                    Maximum="20"
+                    Background="#FFFFFF"
+                    Opacity="0.75"
+                    Grid.Row="1"/>
+
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
