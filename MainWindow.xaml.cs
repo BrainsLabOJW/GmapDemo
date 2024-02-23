@@ -1,17 +1,12 @@
 ﻿using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
-using System.Text;
+using GmapDemo.CustomMarkers;
+using GmapDemo.Models;
+using GmapDemo.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using GmapDemo.CustomMarkers;
 
 namespace GmapDemo
 {
@@ -32,47 +27,40 @@ namespace GmapDemo
         private bool isMousePressed = false;
         private bool isMouseMoved = false;
 
+        MainViewModel model = new MainViewModel();
+
         public MainWindow()
         {
             InitializeComponent();
 
+            this.DataContext = model;
+
             // 기본 설정
             mapControl.MapProvider = GMapProviders.GoogleSatelliteMap;      // 지도제공자
             mapControl.Position = new PointLatLng(35.164928, 128.127485);   // 초기 위치
-            mapControl.MinZoom = 2;
-            mapControl.MaxZoom = 20;
-            mapControl.Zoom = 15;
+
+            mapControl.MinZoom = model.GMapModel.minimumZoom;
+            mapControl.MaxZoom = model.GMapModel.maximumZoom;
+            mapControl.Zoom = model.GMapModel.defaultZoom;
+
             mapControl.ShowCenter = false;
             mapControl.DragButton = MouseButton.Left;
             mapControl.MouseWheelZoomEnabled = true;
-
-            
 
             mapControl.MouseLeftButtonDown += new MouseButtonEventHandler(mapControl_MouseLeftButtonDown);
             mapControl.MouseLeftButtonUp += new MouseButtonEventHandler(mapControl_MouseLeftButtonUp);
             mapControl.MouseMove += new MouseEventHandler(mapControl_MouseMove);
             mapControl.MouseWheel += new MouseWheelEventHandler(mapControl_MouseWheel);
             
-            
-
             setCurrentMarker();
-            mapComboBoxSetting();
+            // mapComboBoxSetting();
 
         }
+
 
         void setCurrentMarker()
         {
             currentMarker = new GMapMarker(mapControl.Position);
-
-
-            /*currentMarker.Shape = new Ellipse
-            {
-                Stroke = Brushes.Red,
-                StrokeThickness = 2,
-                Fill = new SolidColorBrush(Colors.White),
-                Width = 20,
-                Height = 20
-            };*/
 
             currentMarker.Shape = new CustomMarkerBlue(this, currentMarker);
 
@@ -117,24 +105,14 @@ namespace GmapDemo
                 PointLatLng point = mapControl.FromLocalToLatLng((int)clickPoint.X, (int)clickPoint.Y);
                 marker = new GMapMarker(point);
 
-                /*marker.Shape = new Ellipse
-                {
-                    Stroke = Brushes.Yellow,
-                    StrokeThickness = 2,
-                    Fill = new SolidColorBrush(Colors.Black),
-                    Width = 20,
-                    Height = 20
-                };*/
-
                 points.Add(point);
                 markers.Add(marker);
 
                 marker.Shape = new CustomMarker(this, marker, points, markers);
                 marker.Offset = new Point(-22, -45);
+                marker.ZIndex = int.MaxValue;
 
                 mapControl.Markers.Add(marker);
-
-                // DrawRoute();
             }
             else 
             {
@@ -176,22 +154,8 @@ namespace GmapDemo
 
         private void zoomSliderBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // Console.WriteLine(e.NewValue);
             mapControl.Zoom = e.NewValue;
         }
-
-        void DrawRoute()
-        {
-            GMapRoute route = new GMapRoute(points);
-                       
-            Path path = new Path();
-            path.Stroke = Brushes.Red;
-            path.StrokeThickness = 2;
-            path.Effect = null;
-
-            route.Shape = path;
-
-            mapControl.Markers.Add(route);
-        }
-
     }
 }

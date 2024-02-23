@@ -56,12 +56,6 @@ namespace GmapDemo.CustomMarkers
                 _mainWindow.mapControl.CanDragMap = true;
             }
 
-            for(int i = 0; i < _markerList.Count; i++) 
-            {
-                _points[i] = _markerList[i].Position;
-            }
-
-            DrawRoute(_points);
         }
 
         private void CustomMarker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -83,6 +77,14 @@ namespace GmapDemo.CustomMarkers
 
                 _mainWindow.mapControl.CanDragMap = false;
             }
+
+            for (int i = 0; i < _markerList.Count; i++)
+            {
+                _points[i] = _markerList[i].Position;
+            }
+
+            DrawRoute(_points);
+
         }
 
 

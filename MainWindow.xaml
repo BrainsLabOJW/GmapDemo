@@ -4,14 +4,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:GmapDemo.ViewModels"
     xmlns:local="clr-namespace:GmapDemo"
     mc:Ignorable="d"
-    Title="MainWindow"
+    Title="GMap"
     Height="650"
     Width="1000"
     ResizeMode="NoResize"
     xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
     xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+    
     <Window.Resources>
         
         <Style
@@ -103,9 +109,9 @@
 
             <local:MapControls
                 x:Name="mapControl"
-                Zoom="15"
-                MinZoom="2"
-                MaxZoom="20" />
+                Zoom="15" 
+                />
+
         </GroupBox>
 
         <GroupBox
@@ -132,6 +138,7 @@
                     Width="250"
                     Margin="0,0,0,5"
                     Grid.Row="0"
+                    ItemsSource="{Binding Items}"
                     SelectionChanged="mapComboBox_SelectionChanged"
                     >
                 </ComboBox>
@@ -143,10 +150,11 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Stretch"
                     Margin="0,10,0,10"
-                    Minimum="2"
-                    Maximum="20"
-                    Value="15"
+                    Minimum="{Binding GMapModel.minimumZoom}"
+                    Maximum="{Binding GMapModel.maximumZoom}"
+                    Value="{Binding GMapModel.defaultZoom}"
                     IsSnapToTickEnabled="True"
+                    TickFrequency="1"
                     Grid.Row="1"
                     ValueChanged="zoomSliderBar_ValueChanged" />
 
