@@ -76,7 +76,7 @@ namespace GmapDemo
 
             currentMarker.Shape = new CustomMarkerBlue(this, currentMarker);
 
-            currentMarker.Offset = new Point(-20, -43);
+            currentMarker.Offset = new Point(-22, -45);
             currentMarker.ZIndex = int.MaxValue;
 
             mapControl.Markers.Add(currentMarker);
@@ -129,12 +129,12 @@ namespace GmapDemo
                 points.Add(point);
                 markers.Add(marker);
 
-                marker.Shape = new CustomMarker(this, marker, points);
-                marker.Offset = new Point(-20, -43);
+                marker.Shape = new CustomMarker(this, marker, points, markers);
+                marker.Offset = new Point(-22, -45);
 
                 mapControl.Markers.Add(marker);
 
-                DrawRoute();
+                // DrawRoute();
             }
             else 
             {
@@ -176,7 +176,6 @@ namespace GmapDemo
 
         private void zoomSliderBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            System.Console.WriteLine(e.NewValue);
             mapControl.Zoom = e.NewValue;
         }
 
