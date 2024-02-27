@@ -4,6 +4,10 @@ using GMap.NET.WindowsPresentation;
 using GmapDemo.CustomMarkers;
 using GmapDemo.Models;
 using GmapDemo.ViewModels;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,11 +19,8 @@ namespace GmapDemo
     /// </summary>
     public partial class MainWindow : Window
     {
-        PointLatLng start;
-        PointLatLng end;
-
-        GMapMarker currentMarker;
-        GMapMarker marker;
+        GMapMarker? currentMarker;
+        GMapMarker? marker;
 
         List<PointLatLng> points = new List<PointLatLng>();
         List<GMapMarker> markers = new List<GMapMarker>();
@@ -51,10 +52,11 @@ namespace GmapDemo
             mapControl.MouseLeftButtonUp += new MouseButtonEventHandler(mapControl_MouseLeftButtonUp);
             mapControl.MouseMove += new MouseEventHandler(mapControl_MouseMove);
             mapControl.MouseWheel += new MouseWheelEventHandler(mapControl_MouseWheel);
-            
-            setCurrentMarker();
-            // mapComboBoxSetting();
 
+
+            mapComboBox.SelectedIndex = 0;
+
+            setCurrentMarker();
         }
 
 
@@ -95,6 +97,7 @@ namespace GmapDemo
             {
                 isMouseMoved = true;
             }
+
         }
 
         void mapControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -121,17 +124,8 @@ namespace GmapDemo
             isMousePressed = false;
         }
 
-        void mapComboBoxSetting()
-        {
-            mapComboBox.Items.Add("GoogleSatelliteMap");
-            mapComboBox.Items.Add("GoogleMap");
-            mapComboBox.Items.Add("GoogleTerrainMap");
-            mapComboBox.SelectedIndex = 0;
-        }
-
         private void mapComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            System.Console.WriteLine(mapComboBox.SelectedItem);
 
             if(mapComboBox.SelectedIndex == 0)
             {
@@ -156,6 +150,55 @@ namespace GmapDemo
         {
             // Console.WriteLine(e.NewValue);
             mapControl.Zoom = e.NewValue;
+        }
+
+        private void SaveRoute(object sender, RoutedEventArgs e)
+        {
+            object routeJson = JToken.Parse(JsonConvert.SerializeObject(points));
+            Console.WriteLine(routeJson);
+            
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "JSON File(*.json)|*.json";
+            // saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // 파일 탐색기 기본 위치 
+            saveFileDialog.InitialDirectory = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.Desktop)), "Downloads");   // 사용자의 다운로드 폴더
+
+            if(saveFileDialog.ShowDialog() == true)
+            {
+                File.WriteAllText(saveFileDialog.FileName, routeJson.ToString());
+            }
+        }
+
+        private void LoadRoute(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "JSON Files | *.json";
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);     // 내 문서
+
+            if(openFileDialog.ShowDialog() == true)
+            {
+                points.Clear();
+                markers.Clear();
+
+                string loads = File.ReadAllText(openFileDialog.FileName);
+                Console.WriteLine(loads.GetType());
+
+                points = JsonConvert.DeserializeObject<List<PointLatLng>>(loads);
+
+                
+                foreach(PointLatLng point in points)
+                {
+                    marker = new GMapMarker(point);
+
+                    markers.Add(marker);
+
+                    marker.Shape = new CustomMarker(this, marker, points, markers);
+                    marker.Offset = new Point(-22, -45);
+                    marker.ZIndex = int.MaxValue;
+
+                    mapControl.Markers.Add(marker);
+                }
+            }
+                        
         }
     }
 }

@@ -11,10 +11,10 @@ namespace GmapDemo.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private GMapModel _gmapmodel;
+        private GMapModel _gmapmodel = new GMapModel();
         
-        private ObservableCollection<ItemModel> _items;
-        private ItemModel _itemModel;
+        private ObservableCollection<ItemModel> _items = new();
+        private ItemModel _itemModel = new();
 
         public GMapModel GMapModel
         {
@@ -54,7 +54,6 @@ namespace GmapDemo.ViewModels
             }
         }
 
-
         public MainViewModel()
         {
             GMapModel = new GMapModel();
@@ -62,15 +61,17 @@ namespace GmapDemo.ViewModels
             GMapModel.minimumZoom = 2;
             GMapModel.maximumZoom = 20;
 
-            DefaultZoom = 15;
-            MinimumZoom = 2;
+
+            ItemModels = new ItemModel();
 
             Items = new ObservableCollection<ItemModel>
             {
-                new ItemModel {Id = 1, MapProviderName = "GoogleSatelliteMap"},
-                new ItemModel {Id = 2, MapProviderName = "GoogleMap"},
-                new ItemModel {Id = 3, MapProviderName = "GoogleTerrainMap"}
+                new ItemModel {Id = 0, MapProviderName = "GoogleSatelliteMap"},
+                new ItemModel {Id = 1, MapProviderName = "GoogleMap"},
+                new ItemModel {Id = 2, MapProviderName = "GoogleTerrainMap"}
             };
+
         }
+
     }
 }
