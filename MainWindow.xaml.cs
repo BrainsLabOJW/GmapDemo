@@ -19,14 +19,14 @@ namespace GmapDemo
     /// </summary>
     public partial class MainWindow : Window
     {
-        GMapMarker? currentMarker;
+        GMapMarker? currentMarker;  // 기본 위치 마커
         GMapMarker? marker;
 
-        List<PointLatLng> points = new List<PointLatLng>();
-        List<GMapMarker> markers = new List<GMapMarker>();
+        List<PointLatLng> points = new List<PointLatLng>();     // 마커 좌표 배열
+        List<GMapMarker> markers = new List<GMapMarker>();      // 마커 배열
 
-        private bool isMousePressed = false;
-        private bool isMouseMoved = false;
+        private bool isMousePressed = false;    // 마커를 클릭 했는지 판단
+        private bool isMouseMoved = false;      // 마커를 드래그 하고 있는지 판단
 
         MainViewModel model = new MainViewModel();
 
@@ -37,25 +37,27 @@ namespace GmapDemo
             this.DataContext = model;
 
             // 기본 설정
-            mapControl.MapProvider = GMapProviders.GoogleSatelliteMap;      // 지도제공자
-            mapControl.Position = new PointLatLng(35.164928, 128.127485);   // 초기 위치
+            mapControl.MapProvider = GMapProviders.GoogleSatelliteMap;      // 지도제공자 설정
+            mapControl.Position = new PointLatLng(35.164928, 128.127485);   // 기본 위치 설정
 
             mapControl.MinZoom = model.GMapModel.minimumZoom;
             mapControl.MaxZoom = model.GMapModel.maximumZoom;
             mapControl.Zoom = model.GMapModel.defaultZoom;
 
-            mapControl.ShowCenter = false;
-            mapControl.DragButton = MouseButton.Left;
-            mapControl.MouseWheelZoomEnabled = true;
+            mapControl.ShowCenter = false;              // 지도 가운데 +표시 허용 여부
+            mapControl.DragButton = MouseButton.Left;   // 마우스 좌클릭으로 지도 이동함
+            mapControl.MouseWheelZoomEnabled = true;    // 마우스 휠로 지도 줌인/아웃 허용 여부
 
+            // 마우스 이벤트 등록
             mapControl.MouseLeftButtonDown += new MouseButtonEventHandler(mapControl_MouseLeftButtonDown);
             mapControl.MouseLeftButtonUp += new MouseButtonEventHandler(mapControl_MouseLeftButtonUp);
             mapControl.MouseMove += new MouseEventHandler(mapControl_MouseMove);
             mapControl.MouseWheel += new MouseWheelEventHandler(mapControl_MouseWheel);
 
-
+            // 맵 제공자 콤보박스 기본 값 설정
             mapComboBox.SelectedIndex = 0;
 
+            // 기본 위치에 표시할 마커 설정
             setCurrentMarker();
         }
 
@@ -69,14 +71,14 @@ namespace GmapDemo
             currentMarker.Offset = new Point(-22, -45);
             currentMarker.ZIndex = int.MaxValue;
 
-            mapControl.Markers.Add(currentMarker);
-            points.Add(mapControl.Position);
-            markers.Add(currentMarker);
+            mapControl.Markers.Add(currentMarker);  // 지도에 해당 마커 추가
+            points.Add(mapControl.Position);    // 좌표 배열에 값 추가
+            markers.Add(currentMarker);         // 마커 배열에 추가
         }
 
         private void mapControl_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if(e.Delta > 0)
+            if(e.Delta > 0) // 휠 움직임에 따라 슬라이더 값도 바뀌게 함
             {
                 zoomSliderBar.Value += 1;
             }
@@ -102,6 +104,7 @@ namespace GmapDemo
 
         void mapControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            // 마우스를 단순히 클릭했을 때만 마커가 찍히게 함
             if (!isMouseMoved) 
             {
                 Point clickPoint = e.GetPosition(mapControl);
@@ -117,15 +120,17 @@ namespace GmapDemo
 
                 mapControl.Markers.Add(marker);
             }
-            else 
+            else // 마우스 이동 중에 up이벤트가 발생하면 마커가 생성되지 않도록 처리 
             {
                 isMouseMoved = false;
             }
+
             isMousePressed = false;
         }
 
         private void mapComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // 콤보박스 index 값에 따라 지도타입(제공자)가 바뀌도록 설정
 
             if(mapComboBox.SelectedIndex == 0)
             {
@@ -148,16 +153,15 @@ namespace GmapDemo
 
         private void zoomSliderBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            // Console.WriteLine(e.NewValue);
-            mapControl.Zoom = e.NewValue;
+            mapControl.Zoom = e.NewValue; // 슬라이더 값과 같이 지도 zoom 값이 변함
         }
 
         private void SaveRoute(object sender, RoutedEventArgs e)
         {
-            object routeJson = JToken.Parse(JsonConvert.SerializeObject(points));
+            object routeJson = JToken.Parse(JsonConvert.SerializeObject(points));   // 배열을 json으로 변환
             Console.WriteLine(routeJson);
             
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            SaveFileDialog saveFileDialog = new SaveFileDialog();   // 파일탐색기
             saveFileDialog.Filter = "JSON File(*.json)|*.json";
             // saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // 파일 탐색기 기본 위치 
             saveFileDialog.InitialDirectory = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.Desktop)), "Downloads");   // 사용자의 다운로드 폴더
@@ -176,29 +180,38 @@ namespace GmapDemo
 
             if(openFileDialog.ShowDialog() == true)
             {
-                points.Clear();
-                markers.Clear();
+                points.Clear();     // 좌표 배열 비움
+                markers.Clear();    // 마커 배열 비움
 
                 string loads = File.ReadAllText(openFileDialog.FileName);
-                Console.WriteLine(loads.GetType());
 
-                points = JsonConvert.DeserializeObject<List<PointLatLng>>(loads);
+                points = JsonConvert.DeserializeObject<List<PointLatLng>>(loads);   // 파일 내용을 다시 배열로 바꿔서 좌표 배열에 넣어줌
 
-                
+                // 맵 요소(마커,경로) 비움
+                mapControl.Markers.Clear();
+
+                int index = 0;
                 foreach(PointLatLng point in points)
                 {
                     marker = new GMapMarker(point);
 
                     markers.Add(marker);
 
-                    marker.Shape = new CustomMarker(this, marker, points, markers);
+                    if(index == 0)
+                    {
+                        marker.Shape = new CustomMarkerBlue(this, marker);  // 첫번째 인덱스(초기 위치)만 다른 마커로 표시
+                    }else if(index > 0) 
+                    {
+                        marker.Shape = new CustomMarker(this, marker, points, markers);
+                    }
+
                     marker.Offset = new Point(-22, -45);
                     marker.ZIndex = int.MaxValue;
 
                     mapControl.Markers.Add(marker);
+                    index++;
                 }
             }
-                        
         }
     }
 }

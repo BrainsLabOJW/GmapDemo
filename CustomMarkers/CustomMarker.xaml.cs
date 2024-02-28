@@ -70,6 +70,7 @@ namespace GmapDemo.CustomMarkers
 
         private void CustomMarker_MouseMove(object sender, MouseEventArgs e)
         {
+            // 마커를 클릭한 상태로 마우스를 움직일 때 마커도 이동되게끔
             if(e.LeftButton == MouseButtonState.Pressed && IsMouseCaptured) 
             { 
                 var position = e.GetPosition(_mainWindow.mapControl);
@@ -78,13 +79,14 @@ namespace GmapDemo.CustomMarkers
                 _mainWindow.mapControl.CanDragMap = false;
             }
 
+            // 마커 움직임에 따라서 좌표 배열의 값도 바뀌게 함
             for (int i = 0; i < _markerList.Count; i++)
             {
                 _points[i] = _markerList[i].Position;
             }
 
+            // 마커 움직임에 따라 경로 표시도 새로 그림
             DrawRoute(_points);
-
         }
 
 
@@ -103,8 +105,8 @@ namespace GmapDemo.CustomMarkers
             route = new GMapRoute(pointList);
 
             Path path = new Path();
-            path.Stroke = Brushes.Red;
-            path.StrokeThickness = 2;
+            path.Stroke = Brushes.Red;  // 색상
+            path.StrokeThickness = 2;   // 선 굵기
             path.Effect = null;
 
             route.Shape = path;
