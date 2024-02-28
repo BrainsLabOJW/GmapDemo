@@ -27,5 +27,4 @@ namespace GmapDemo
             return services.BuildServiceProvider();
         }
     }
-
 }

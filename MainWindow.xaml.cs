@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace GmapDemo
@@ -27,6 +28,8 @@ namespace GmapDemo
 
         private bool isMousePressed = false;    // 마커를 클릭 했는지 판단
         private bool isMouseMoved = false;      // 마커를 드래그 하고 있는지 판단
+
+        string? routeText = string.Empty;    // 불러온 경로 파일 내용
 
         MainViewModel model = new MainViewModel();
 
@@ -163,8 +166,7 @@ namespace GmapDemo
             
             SaveFileDialog saveFileDialog = new SaveFileDialog();   // 파일탐색기
             saveFileDialog.Filter = "JSON File(*.json)|*.json";
-            // saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // 파일 탐색기 기본 위치 
-            saveFileDialog.InitialDirectory = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.Desktop)), "Downloads");   // 사용자의 다운로드 폴더
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // 파일 탐색기 기본 위치 설정
 
             if(saveFileDialog.ShowDialog() == true)
             {
@@ -176,40 +178,48 @@ namespace GmapDemo
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "JSON Files | *.json";
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);     // 내 문서
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);     // 위치: 내 문서
 
             if(openFileDialog.ShowDialog() == true)
             {
+                
                 points.Clear();     // 좌표 배열 비움
                 markers.Clear();    // 마커 배열 비움
 
-                string loads = File.ReadAllText(openFileDialog.FileName);
+                routeText = File.ReadAllText(openFileDialog.FileName);
 
-                points = JsonConvert.DeserializeObject<List<PointLatLng>>(loads);   // 파일 내용을 다시 배열로 바꿔서 좌표 배열에 넣어줌
+                List<PointLatLng>? results = JsonConvert.DeserializeObject<List<PointLatLng>>(routeText);   // 파일 내용을 다시 배열로 바꿔서 좌표 배열에 넣어줌
+                
+                if(results != null)
+                {
+                    points = results;
+                }
+
 
                 // 맵 요소(마커,경로) 비움
                 mapControl.Markers.Clear();
 
-                int index = 0;
-                foreach(PointLatLng point in points)
+                if (points != null)
                 {
-                    marker = new GMapMarker(point);
-
-                    markers.Add(marker);
-
-                    if(index == 0)
+                    for (int i = 0; i < points.Count; i++)
                     {
-                        marker.Shape = new CustomMarkerBlue(this, marker);  // 첫번째 인덱스(초기 위치)만 다른 마커로 표시
-                    }else if(index > 0) 
-                    {
-                        marker.Shape = new CustomMarker(this, marker, points, markers);
+                        marker = new GMapMarker(points[i]);
+                        markers.Add(marker);
+
+                        if (i == 0)
+                        {
+                            marker.Shape = new CustomMarkerBlue(this, marker);  // 첫번째 인덱스(초기 위치)만 다른 마커로 표시
+                        }
+                        else
+                        {
+                            marker.Shape = new CustomMarker(this, marker, points, markers);
+                        }
+
+                        marker.Offset = new Point(-22, -45);
+                        marker.ZIndex = int.MaxValue;
+
+                        mapControl.Markers.Add(marker);
                     }
-
-                    marker.Offset = new Point(-22, -45);
-                    marker.ZIndex = int.MaxValue;
-
-                    mapControl.Markers.Add(marker);
-                    index++;
                 }
             }
         }

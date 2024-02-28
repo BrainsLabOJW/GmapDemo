@@ -1,18 +1,7 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsPresentation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 
@@ -28,8 +17,8 @@ namespace GmapDemo.CustomMarkers
         private List<PointLatLng> _points;
         private List<GMapMarker> _markerList;
 
-        private GMapMarker oldValue;
-        private GMapRoute route;
+        private GMapMarker? oldValue;
+        private GMapRoute? route;
 
         public CustomMarker(MainWindow window, GMapMarker marker, List<PointLatLng> points, List<GMapMarker> markerList)
         {
@@ -64,7 +53,6 @@ namespace GmapDemo.CustomMarkers
             {
                 Mouse.Capture(this);
             }
-
             oldValue = _marker;
         }
 
@@ -112,6 +100,10 @@ namespace GmapDemo.CustomMarkers
             route.Shape = path;
 
             _mainWindow.mapControl.Markers.Add(route);
+
         }
     }
 }
+
+
+
