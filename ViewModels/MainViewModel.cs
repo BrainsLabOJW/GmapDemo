@@ -7,10 +7,15 @@ namespace GmapDemo.ViewModels
     public class MainViewModel : ViewModelBase
     {
         #region properties
+        
         private GMapModel _gmapmodel = new GMapModel();
         
         private ObservableCollection<ComboBoxItemModel> _items = new();
         private ComboBoxItemModel _comboBoxItemModel = new();
+
+
+
+
         #endregion
 
 

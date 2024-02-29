@@ -112,7 +112,7 @@
 
             <local:MapControls
                 x:Name="mapControl"
-                Zoom="{Binding DefaultZoom}" />
+                Zoom="{Binding GMapModel.defaultZoom}" />
         </GroupBox>
 
         <!-- 오른쪽 그룹박스 -->

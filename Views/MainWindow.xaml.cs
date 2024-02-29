@@ -20,7 +20,7 @@ namespace GmapDemo
     /// </summary>
     public partial class MainWindow : Window
     {
-        #region Declaration
+        #region properties
         GMapMarker? currentMarker;  // 기본 위치 마커
         GMapMarker? marker;
 
