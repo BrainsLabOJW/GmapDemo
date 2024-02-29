@@ -12,13 +12,16 @@ namespace GmapDemo.CustomMarkers
     /// </summary>
     public partial class CustomMarker
     {
+        #region properties
         private GMapMarker _marker;
-        private MainWindow _mainWindow;
-        private List<PointLatLng> _points;
-        private List<GMapMarker> _markerList;
+        private MainWindow _mainWindow = new MainWindow();
+        private List<PointLatLng> _points = new List<PointLatLng>();
+        private List<GMapMarker> _markerList = new List<GMapMarker>();
 
         private GMapMarker? oldValue;
         private GMapRoute? route;
+        #endregion
+
 
         public CustomMarker(MainWindow window, GMapMarker marker, List<PointLatLng> points, List<GMapMarker> markerList)
         {
@@ -29,15 +32,15 @@ namespace GmapDemo.CustomMarkers
             _points = points;
             _markerList = markerList;
 
-            MouseLeftButtonUp += CustomMarker_MouseLeftButtonUp;
-            MouseLeftButtonDown += CustomMarker_MouseLeftButtonDown;
-            MouseMove += CustomMarker_MouseMove;
+            MouseLeftButtonUp += CustomMarkerMouseLeftButtonUp;
+            MouseLeftButtonDown += CustomMarkerMouseLeftButtonDown;
+            MouseMove += CustomMarkerMouseMove;
 
 
             DrawRoute(_points);
         }
 
-        private void CustomMarker_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void CustomMarkerMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (IsMouseCaptured)
             {
@@ -47,7 +50,7 @@ namespace GmapDemo.CustomMarkers
 
         }
 
-        private void CustomMarker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void CustomMarkerMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if(!IsMouseCaptured) 
             {
@@ -56,7 +59,7 @@ namespace GmapDemo.CustomMarkers
             oldValue = _marker;
         }
 
-        private void CustomMarker_MouseMove(object sender, MouseEventArgs e)
+        private void CustomMarkerMouseMove(object sender, MouseEventArgs e)
         {
             // 마커를 클릭한 상태로 마우스를 움직일 때 마커도 이동되게끔
             if(e.LeftButton == MouseButtonState.Pressed && IsMouseCaptured) 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GmapDemo.Models
 {
-    public class ItemModel
+    public class ComboBoxItemModel
     {
         public int Id { get; set; }
         public string? MapProviderName {  get; set; }

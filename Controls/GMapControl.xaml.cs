@@ -13,17 +13,5 @@ namespace GmapDemo.Controls
             InitializeComponent();
         }
 
-
-
-        public decimal MinZoomProperty
-        {
-            get { return (decimal)GetValue(MinZoomPropertyProperty); }
-            set { SetValue(MinZoomPropertyProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for MinZoomProperty.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MinZoomPropertyProperty =
-            DependencyProperty.Register("MinZoomProperty", typeof(decimal), typeof(GMapControl), new PropertyMetadata(0m));
-
     }
 }

@@ -18,8 +18,10 @@
         <vm:MainViewModel />
     </Window.DataContext>
     
+    
     <Window.Resources>
         
+        <!-- mapControl groupbox style -->
         <Style
             x:Key="GroupBoxStyle"
             TargetType="{x:Type GroupBox}">

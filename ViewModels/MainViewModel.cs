@@ -1,9 +1,4 @@
 ﻿using GmapDemo.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GmapDemo.Models;
 using System.Collections.ObjectModel;
 
@@ -11,10 +6,13 @@ namespace GmapDemo.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
+        #region properties
         private GMapModel _gmapmodel = new GMapModel();
         
-        private ObservableCollection<ItemModel> _items = new();
-        private ItemModel _itemModel = new();
+        private ObservableCollection<ComboBoxItemModel> _items = new();
+        private ComboBoxItemModel _comboBoxItemModel = new();
+        #endregion
+
 
         public GMapModel GMapModel
         {
@@ -22,37 +20,29 @@ namespace GmapDemo.ViewModels
             set => SetProperty(ref _gmapmodel, value);
         }
 
-        public int DefaultZoom
+        #region ItemModel
+        public ObservableCollection<ComboBoxItemModel> Items
         {
-            get { return _gmapmodel.defaultZoom; }
-            set { _gmapmodel.defaultZoom = value; OnPropertyChanged(); }
-        }
-
-        public int MinimumZoom
-        {
-            get { return _gmapmodel.minimumZoom; }
-            set { _gmapmodel.minimumZoom = value; OnPropertyChanged(); }
-        }
-
-        public ObservableCollection<ItemModel> Items
-        {
-            get { return (ObservableCollection<ItemModel>)_items; }
+            get { return (ObservableCollection<ComboBoxItemModel>)_items; }
             set 
             {
-                _items = (ObservableCollection<ItemModel>)value; 
+                _items = (ObservableCollection<ComboBoxItemModel>)value; 
                 OnPropertyChanged(nameof(Items)); 
             }
         }
 
-        public ItemModel ItemModels
+        public ComboBoxItemModel ComboBoxItemModels
         {
-            get { return _itemModel; }
+            get { return _comboBoxItemModel; }
             set
             {
-                _itemModel = value;
-                OnPropertyChanged(nameof(ItemModels));
+                _comboBoxItemModel = value;
+                OnPropertyChanged(nameof(ComboBoxItemModels));
             }
         }
+        #endregion
+
+
 
         public MainViewModel()
         {
@@ -62,16 +52,14 @@ namespace GmapDemo.ViewModels
             GMapModel.maximumZoom = 20;
 
 
-            ItemModels = new ItemModel();
+            ComboBoxItemModels = new ComboBoxItemModel();
 
-            Items = new ObservableCollection<ItemModel>
+            Items = new ObservableCollection<ComboBoxItemModel>
             {
-                new ItemModel {Id = 0, MapProviderName = "GoogleSatelliteMap"},
-                new ItemModel {Id = 1, MapProviderName = "GoogleMap"},
-                new ItemModel {Id = 2, MapProviderName = "GoogleTerrainMap"}
+                new ComboBoxItemModel {Id = 0, MapProviderName = "GoogleSatelliteMap"},
+                new ComboBoxItemModel {Id = 1, MapProviderName = "GoogleMap"},
+                new ComboBoxItemModel {Id = 2, MapProviderName = "GoogleTerrainMap"}
             };
-
         }
-
     }
 }

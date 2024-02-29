@@ -20,6 +20,7 @@ namespace GmapDemo
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Declaration
         GMapMarker? currentMarker;  // 기본 위치 마커
         GMapMarker? marker;
 
@@ -32,6 +33,7 @@ namespace GmapDemo
         string? routeText = string.Empty;    // 불러온 경로 파일 내용
 
         MainViewModel model = new MainViewModel();
+        #endregion
 
         public MainWindow()
         {
@@ -78,6 +80,8 @@ namespace GmapDemo
             points.Add(mapControl.Position);    // 좌표 배열에 값 추가
             markers.Add(currentMarker);         // 마커 배열에 추가
         }
+
+        #region Mouse Evnet
 
         private void mapControl_MouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -130,6 +134,7 @@ namespace GmapDemo
 
             isMousePressed = false;
         }
+        #endregion
 
         private void mapComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -159,6 +164,7 @@ namespace GmapDemo
             mapControl.Zoom = e.NewValue; // 슬라이더 값과 같이 지도 zoom 값이 변함
         }
 
+        #region 경로 저장/불러오기
         private void SaveRoute(object sender, RoutedEventArgs e)
         {
             object routeJson = JToken.Parse(JsonConvert.SerializeObject(points));   // 배열을 json으로 변환
@@ -183,8 +189,9 @@ namespace GmapDemo
             if(openFileDialog.ShowDialog() == true)
             {
                 
-                points.Clear();     // 좌표 배열 비움
+                points.Clear();     // 좌표 배열 비움  
                 markers.Clear();    // 마커 배열 비움
+
 
                 routeText = File.ReadAllText(openFileDialog.FileName);
 
@@ -223,5 +230,6 @@ namespace GmapDemo
                 }
             }
         }
+        #endregion
     }
 }
